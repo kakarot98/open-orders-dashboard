@@ -9,9 +9,26 @@ body {
 }
 
 .container {
-    @apply max-w-6xl mx-auto px-3;
+    @apply max-w-6xl mx-auto px-3 sm:p-4 md:px-6;
 }
 
 .card {
-    @apply border rounded-md p-3 bg-white shadow-sm;
+    @apply border rounded-md p-3 sm:p-4 bg-white shadow-sm;
 }
+
+.chart {
+    height: 260px;
+}
+
+@media (min-width: 640px) {
+    .chart {
+        height: 320px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .chart {
+        height: 380px;
+    }
+}
+

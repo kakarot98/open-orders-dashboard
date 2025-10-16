@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts"
 import { useMemo } from "react"
+import { useBreakpoint } from "@/lib/utils"
 
 type DepthPoint = { ts: number | string; buy: number; sell: number }
 type FillPoint = { ts: number | string; volume: number }
@@ -29,6 +30,10 @@ export function Charts({
   depth: DepthPoint[]
   fills: FillPoint[]
 }) {
+
+  //get the screen width of device
+  const {isSm, isMd} = useBreakpoint()
+
 
   //creating a single array to be given to ComposedChart
   const merged = useMemo(() => {
@@ -66,9 +71,11 @@ export function Charts({
       day: "2-digit",
     })
 
+    const tickFont = {fontSize: isSm ? 11 : 13, fill: "#475569"}
+    
     return (
     <div className="card">
-      <h2 className="text-sm font-medium mb-2">
+      <h2 className="text-sm sm:text-base font-medium mb-2">
         Open Order Depth + Fill Volume
       </h2>
       <div style={{ width: "100%", height: 380 }}>
@@ -77,50 +84,51 @@ export function Charts({
             data={merged}
             barCategoryGap="1%"
             barGap={0}
-            margin={{ top: 20, right: 60, left: 20, bottom: 20 }}
+            margin={{ top: 20, right: isSm ? 40 : 60, left: isSm ? 12 : 20, bottom: isSm ? 12 : 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
+
             <XAxis
               dataKey="ts"
               type="number"
               domain={["dataMin", "dataMax"]}
               tickFormatter={formatTs}
-              tickCount={6}
-              height={50}
-              tick={{
-                fontSize: 13,
-                fill: "#475569"
-              }}
+              tickCount={isSm ? 3 : isMd ? 5 : 6}
+              height={isSm ? 38 : 50}
+              tick={tickFont}
             />
 
             {/* Left Y axis for the depth dta indicator */}
             <YAxis
               yAxisId="left"
               tickCount={6}
-              width={50}
+              width={isSm ? 40 : 50}
               stroke="#64748b"
               tickFormatter={(v) => v.toLocaleString()}
               allowDataOverflow={false}
               domain={[0, "auto"]}
-              tick={{fontSize: 13, fill: "#475569"}}
+              tick={tickFont}
             />
 
             {/* Obviously the right Yaxis for fill quantity  */}
             <YAxis
               yAxisId="right"
               orientation="right"
-              width={35}
+              width={isSm ? 32 : 40}
               stroke="#94a3b8"
               tickFormatter={(v) => v.toLocaleString()}
               allowDataOverflow={false}
               domain={[0, "auto"]}
-              tick={{fontSize: 13, fill: "#475569"}}
+              tick={tickFont}
             />
             <Tooltip
               labelFormatter={(v) => formatTs(Number(v))}
               formatter={(v: any, name: string) => [v, name]}
+              wrapperStyle={{
+                fontSize: isSm ? 11 : 12
+              }}
             />
-            <Legend verticalAlign="top" align="center" wrapperStyle={{padding: 15, fontSize: 13}} />
+            <Legend verticalAlign="top" align="center" wrapperStyle={{padding: isSm ? 8 : 12, fontSize: isSm ? 11 : 13}} height={isSm ? 24 : 32} />
 
             {/* Bars in the background */}
             <Bar
@@ -128,7 +136,7 @@ export function Charts({
               dataKey="volume"
               name="Fill Volume"
               fill="#a3a3a3"
-              barSize={6}
+              barSize={isSm ? 5 : 6}
               maxBarSize={8}
               fillOpacity={0.3}
               stroke="none"
