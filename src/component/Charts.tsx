@@ -10,7 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { useBreakpoint } from "@/lib/utils"
 
 type DepthPoint = { ts: number | string; buy: number; sell: number }
@@ -31,6 +31,11 @@ export function Charts({
   fills: FillPoint[]
 }) {
 
+  const [mode, setMode] = useState<"all" | "depth" | "fills">("all")
+
+  const nextMode = () => 
+    setMode(m => (m === "all" ? "depth" : m === "depth" ? "fills" : "all"))
+  
   //get the screen width of device
   const {isSm, isMd} = useBreakpoint()
 
@@ -131,7 +136,8 @@ export function Charts({
             <Legend verticalAlign="top" align="center" wrapperStyle={{padding: isSm ? 8 : 12, fontSize: isSm ? 11 : 13}} height={isSm ? 24 : 32} />
 
             {/* Bars in the background */}
-            <Bar
+            {mode !== "depth" && (
+              <Bar
               yAxisId="right"
               dataKey="volume"
               name="Fill Volume"
@@ -142,32 +148,44 @@ export function Charts({
               stroke="none"
               isAnimationActive={false}
             />
+            )}
+            
 
-            {/* Depth lines in the foreground */}
-            <Line
-              yAxisId="left"
-              type="linear"
-              dataKey="buy"
-              name="Buy Depth"
-              stroke="#2563eb"
-              strokeWidth={1.8}
-              dot={false}
-              connectNulls
-              isAnimationActive={false}
-            />
-            <Line
-              yAxisId="left"
-              type="linear"
-              dataKey="sell"
-              name="Sell Depth"
-              stroke="#dc2626"
-              strokeWidth={1.8}
-              dot={false}
-              connectNulls
-              isAnimationActive={false}
-            />
+              {/* Depth lines in the foreground */}
+              {mode !== "fills" && (
+                <>
+                  <Line
+                    yAxisId="left"
+                    type="linear"
+                    dataKey="buy"
+                    name="Buy Depth"
+                    stroke="#2563eb"
+                    strokeWidth={1.8}
+                    dot={false}
+                    connectNulls
+                    isAnimationActive={false}
+                  />
+                  <Line
+                    yAxisId="left"
+                    type="linear"
+                    dataKey="sell"
+                    name="Sell Depth"
+                    stroke="#dc2626"
+                    strokeWidth={1.8}
+                    dot={false}
+                    connectNulls
+                    isAnimationActive={false}
+                  />
+                </>
+              )}
+            
           </ComposedChart>
         </ResponsiveContainer>
+      </div>
+      <div className="mt-3 flex justify-end">
+        <button onClick={nextMode} className="px-3 py-1.5 text-sm border rounded-md hover:bg-gray-200 min-w-33 text-left"  aria-label="Toggle chart view">
+          View: {mode == "all" ? "Depth only" : mode === "depth" ? "Fill only" : "All"}
+        </button>
       </div>
     </div>
   )
