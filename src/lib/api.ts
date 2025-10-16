@@ -1,5 +1,4 @@
-export type DepthPoint = { ts: number; buy: number; sell: number };
-export type FillPoint  = { ts: number; volume: number };
+import { DepthPoint, FillPoint } from "./types";
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3000";
 
