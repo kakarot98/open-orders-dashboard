@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Open Orders Dashboard
 
-## Getting Started
+This project shows open order depth (buy/sell) and fill volume data together on a single chart.  
+It uses a Rust backend that serves mock data and a Next.js frontend that plots it with Recharts.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Project structure
+```
+.
+├── backend/         # Rust server (provided)
+├── frontend/        # Next.js + TypeScript + Tailwind app
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup instructions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Run the backend provided by company
+The backend exposes `/depth` and `/fill` endpoints. Start docker desktop and then bash in backend > curly-parakeet
 
-## Learn More
+**Requirements:** Docker
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cd backend
+cd curly-parakeet
+docker compose build server
+docker compose server up
+```
+Runs on **http://localhost:3000**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Run the frontend
+The frontend will run on a differnt port than backend 
 
-## Deploy on Vercel
+**Requirements:** Node.js ≥ 18 and npm
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cd frontend
+npm install
+npm run dev -- -p 3001
+```
+Then visit **http://localhost:3001** (or the port Next.js shows).  
+Make sure the backend is running first.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## What this does
+
+- The dashboard fetches data from both `/depth` and `/fill`.
+- Depth (buy/sell) is drawn as blue and red lines.
+- Fill volume is shown as gray bars behind them.
+- Both datasets are merged into 60-seconds buckets so that the timestamps line up.
+
+---
+
+## Assumptions
+
+- You already possess the backend files
+- Depth data updates roughly every few seconds. I only keep the **latest** snapshot per bucket since it represents the current state.
+- Fill data is **summed** or **accumulated** per bucket to show total traded quantity.
+- Each bucket represents **60 seconds**. This can be changed according to the requirements
+- No artificial data is created for missing timestamps.
+
+---
+
+## Responsiveness
+
+- Layout is built with TailwindCSS utilities.  
+- The chart resizes automatically using `ResponsiveContainer` from Recharts.  
+- Font size, axis spacing, and margins adjust for smaller screens.
+
+---
+
+## Tools used
+
+- **Next.js + TypeScript** – frontend framework  
+- **TailwindCSS** – styling  
+- **Recharts** – chart rendering  
+- **Rust** – mock API backend  
+
+---
+
+## How to check
+
+When both servers are running:
+- Visit the frontend in your browser.
+- You should see two lines (buy/sell) and faint bars (fill volume).
+- Hover over the chart to see time and values in tooltips.
+
+---
+
+This project was made for the open orders dashboard take‑home test.
