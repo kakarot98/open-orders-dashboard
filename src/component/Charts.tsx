@@ -77,7 +77,7 @@ export function Charts({
             data={merged}
             barCategoryGap="1%"
             barGap={0}
-            margin={{ top: 10, right: 45, left: 0, bottom: 0 }}
+            margin={{ top: 20, right: 60, left: 20, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
@@ -86,7 +86,14 @@ export function Charts({
               domain={["dataMin", "dataMax"]}
               tickFormatter={formatTs}
               tickCount={6}
+              height={50}
+              tick={{
+                fontSize: 13,
+                fill: "#475569"
+              }}
             />
+
+            {/* Left Y axis for the depth dta indicator */}
             <YAxis
               yAxisId="left"
               tickCount={6}
@@ -95,7 +102,10 @@ export function Charts({
               tickFormatter={(v) => v.toLocaleString()}
               allowDataOverflow={false}
               domain={[0, "auto"]}
+              tick={{fontSize: 13, fill: "#475569"}}
             />
+
+            {/* Obviously the right Yaxis for fill quantity  */}
             <YAxis
               yAxisId="right"
               orientation="right"
@@ -104,12 +114,13 @@ export function Charts({
               tickFormatter={(v) => v.toLocaleString()}
               allowDataOverflow={false}
               domain={[0, "auto"]}
+              tick={{fontSize: 13, fill: "#475569"}}
             />
             <Tooltip
               labelFormatter={(v) => formatTs(Number(v))}
               formatter={(v: any, name: string) => [v, name]}
             />
-            <Legend />
+            <Legend verticalAlign="top" align="center" wrapperStyle={{padding: 15, fontSize: 13}} />
 
             {/* Bars in the background */}
             <Bar
