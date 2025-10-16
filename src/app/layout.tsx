@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { initialState } from "recharts/types/state/rootPropsSlice";
 
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Historical open order depth and fill volume",
 };
 
-export const viewport = {width:"device-width", initialScale:1}
+export const viewport: Viewport = {width:"device-width", initialScale: 1}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

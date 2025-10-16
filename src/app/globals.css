@@ -9,7 +9,7 @@ body {
 }
 
 .container {
-    @apply max-w-6xl mx-auto px-3 sm:p-4 md:px-6;
+    @apply max-w-full sm:max-w-6xl mx-auto px-3 sm:p-4 md:px-6;
 }
 
 .card {

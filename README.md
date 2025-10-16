@@ -26,7 +26,7 @@ The backend exposes `/depth` and `/fill` endpoints. Start docker desktop and the
 cd backend
 cd curly-parakeet
 docker compose build server
-docker compose server up
+docker compose up server
 ```
 Runs on **http://localhost:3000**.
 
@@ -60,9 +60,11 @@ Make sure the backend is running first.
 
 - You already possess the backend files
 - Depth data updates roughly every few seconds. I only keep the **latest** snapshot per bucket since it represents the current state.
+- The latest snapshot of depth every 30 seconds displays the data that is needed by the user
 - Fill data is **summed** or **accumulated** per bucket to show total traded quantity.
-- Each bucket represents **60 seconds**. This can be changed according to the requirements
+- Each bucket represents **30 seconds**. This can be changed according to the requirements
 - No artificial data is created for missing timestamps.
+- Both charts are needed in the same graph
 
 ---
 
